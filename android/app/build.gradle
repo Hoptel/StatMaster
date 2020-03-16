@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.the-e-dev.statmaster"
+        applicationId "com.theedev.statmaster"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
