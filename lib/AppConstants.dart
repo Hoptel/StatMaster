@@ -1,3 +1,4 @@
+//TODO move this to Preference class
 class PreferenceKeys {
   static const String current_user = "current_user";
   static const String multi_user_login = "multi_user_login";

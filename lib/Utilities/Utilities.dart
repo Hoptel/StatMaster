@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const String imagePath = "/resources/image_assets/";
+
 class Utils {
   ///
   /// taken from flutter/material/constant class
