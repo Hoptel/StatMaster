@@ -125,13 +125,13 @@ class LoginScreenState extends State<LoginScreen> {
                                   color: widget.firstTime ? _textDark : _textLight,
                                 ),
                                 labelText: 'password',
-                                suffix: IconButton(
-                                  icon: model.showPassword
+                                suffix: InkWell(borderRadius: BorderRadius.circular(30),
+                                  child: model.showPassword
                                       ? Icon(Icons.remove_red_eye,
                                           color: widget.firstTime ? _fieldDark : _fieldLight)
                                       : Icon(Icons.remove_red_eye,
                                           color: widget.firstTime ? _fieldDark : _fieldLight),
-                                  onPressed: () {
+                                  onTap: () {
                                     model.updateShowPassword();
                                   },
                                 ),
