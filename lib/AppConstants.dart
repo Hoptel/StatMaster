@@ -5,7 +5,7 @@ class PreferenceKeys {
   static const String user_id = "user_id";
   static const String sync_url = "sync_url";
 
-  //Loginfo related stuff
+  //user info related stuff
   static const String authlevel = "authlevel";
   static const String code = "code";
   static const String hotelrefno = "hotelrefno";

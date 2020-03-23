@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 const String imagePath = "/resources/image_assets/";
 
 class Utils {
-  ///
-  /// taken from flutter/material/constant class
-  ///
-  static const double toolbarHeight = 56.0;
+  static const double appbarHeight = 56.0;
 
   static Size screenSize(BuildContext context) {
     return MediaQuery.of(context).size;
@@ -41,8 +38,8 @@ class Utils {
     return screenHeight(context) -
         statusBarHeight(context) -
         (includeBottomPadding ? getBottomNavBarExtraHeight(context) : 0.0) -
-        (hasNavBar ? toolbarHeight : 0.0) -
-        (hasAppBar ? toolbarHeight : 0.0);
+        (hasNavBar ? appbarHeight : 0.0) -
+        (hasAppBar ? appbarHeight : 0.0);
   }
 
   static const bool isDEBUG = !bool.fromEnvironment("dart.vm.product");
