@@ -20,12 +20,12 @@ abstract class Conveyor<T> {
   ///
   /// this returns the API's URL
   ///
-  String getBaseUrl() => 'http://10.0.2.2:5000/forest'; //Preference.getString(PreferenceKeys.sync_url);
+  static const String serverUrl = 'http://10.0.2.2:5000/forest';
 
   ///
-  ///This is used to generate the API request's URL
+  ///This is used to get the API's module or blueprint URL
   ///
-  String getEndpointName();
+  String getBlueprintName();
 
   ///
   ///This is used to generate models and return them
@@ -36,50 +36,42 @@ abstract class Conveyor<T> {
   ///These are the methods used to send the requests
   ///
   static Map<HttpMethod, dynamic> clientFunctions = {
-  HttpMethod.GET: (url, headers, requestBody) => serviceClient.get(url, headers: headers),
-  HttpMethod.HEAD: (url, headers, requestBody) => serviceClient.head(url, headers: headers),
-  HttpMethod.POST: (url, headers, requestBody) => serviceClient.post(url, body: requestBody, headers: headers),
-  HttpMethod.PUT: (url, headers, requestBody) => serviceClient.put(url, body: requestBody, headers: headers),
-  HttpMethod.PATCH: (url, headers, requestBody) => serviceClient.patch(url, body: requestBody, headers: headers),
-  HttpMethod.DELETE: (url, headers, requestBody) => serviceClient.delete(url, headers: headers),
+  HttpMethod.GET: (url, headers, requestBody) => httpClient.get(url, headers: headers),
+  HttpMethod.HEAD: (url, headers, requestBody) => httpClient.head(url, headers: headers),
+  HttpMethod.POST: (url, headers, requestBody) => httpClient.post(url, body: requestBody, headers: headers),
+  HttpMethod.PUT: (url, headers, requestBody) => httpClient.put(url, body: requestBody, headers: headers),
+  HttpMethod.PATCH: (url, headers, requestBody) => httpClient.patch(url, body: requestBody, headers: headers),
+  HttpMethod.DELETE: (url, headers, requestBody) => httpClient.delete(url, headers: headers),
   };
 
-  static IOClient serviceClient;
+  static IOClient httpClient;
 
   ///
   ///This method sends the request and returns the response, please don't put sensitive data in the bloody parameters
   ///
-  Future<Response> callService(
+   Future<Response> sendRequest(
       HttpMethod method,
-      String moduleUrl,
+      String endpointPath,
       Map<String, String> headers, {
         requestBody,
         Map<String, dynamic> params,
         Map<String, dynamic> queries,
-        String customUrl,
-        Duration timeout = const Duration(seconds: 10),
+        Duration timeout = const Duration(seconds: 8),
       }) async {
-    //create a new client if one doesn't exist
-    serviceClient = serviceClient ?? IOClient();
+    httpClient = httpClient ?? IOClient();
 
-    // get url
-    String url = (customUrl ?? getBaseUrl()) + (getEndpointName() ?? "") + moduleUrl + fullArgsToString(params, queries);
+    String url = (serverUrl + (getBlueprintName() ?? "") + endpointPath + fullArgsToString(params, queries));
 
     try {
       Future<Response> future;
       Response response;
-
-      //print the HTTP request
       printRequest(url, method, headers, requestBody);
 
-      //send the request
       future = clientFunctions[method](url, headers, requestBody);
 
       if (future != null) {
-        //get the response.
-        response = timeout != null ? await future.timeout(timeout) : await future;
+        response = await future.timeout(timeout);
 
-        //print the response
         if (response != null && Utils.isDEBUG) {
           printResponseLog(method, response, url);
           return response;
@@ -91,20 +83,22 @@ abstract class Conveyor<T> {
       Fluttertoast.showToast(msg: "${exception.toString()}");
       }
     }
-
     return null;
   }
 
-  ///
-  ///prints the request, duh
-  ///
+  static void sendRequestIsolate(Conveyor conveyor, HttpMethod method, String endpointPath, Map<String, String> headers, 
+  {requestBody, Map<String, dynamic> params, Map<String, dynamic> queries, Duration timeout})
+  {
+    conveyor.sendRequest(method, endpointPath, headers, requestBody: requestBody, params: params, queries: queries, timeout: timeout);
+  }
+
   static void printRequest(
       String url,
       HttpMethod method,
       headers,
       requestBody,
       ) {
-    String httpMethod = method != null ? method.toString().substring(11) : ""; //"httpmethod." is 11 characters long
+    String httpMethod = method != null ? method.toString().substring(11) : "";
     String header = headers != null ? headers.toString() + "\n" : "";
     String returnString = "▲▲▲ $httpMethod $url\n$header\n";
 
@@ -112,31 +106,19 @@ abstract class Conveyor<T> {
       returnString += "Request Body: $requestBody\n";
     }
 
-    Utils.logPrint(returnString);
+    print(returnString);
   }
 
-  ///
-  /// print the response received from the service along with status code, url, and response.
-  /// takes the response as a [String]
-  ///
   void printResponse(HttpMethod method, String response, int statusCode, String url) {
     String returnString = "▼▼▼ $statusCode $url\nResponse Body: $response";
 
-    Utils.logPrint(returnString);
+    print(returnString);
   }
 
-  ///
-  /// print the response received from the service along with status code, url, and response.
-  ///
   void printResponseLog(HttpMethod method, Response response, String url) {
     printResponse(method, response.body, response.statusCode, url);
   }
 
-  ///
-  /// @return the [query] param and the other params to be appended to the services
-  ///
-  /// @example {entity}/view/list?query=id:15,roomno:15D&allhotels=true&limit=50
-  ///
   static String fullArgsToString(Map<String, dynamic> params, Map<String, dynamic> queries) {
     String returnString = "";
     String paramsStr = argsToString(params);
@@ -154,9 +136,6 @@ abstract class Conveyor<T> {
     return returnString;
   }
 
-  ///
-  ///Converts the parameter map to a string that will be added to the URL
-  ///
   static String argsToString(Map<String, dynamic> params) {
     String ret = "";
     if (params == null) {
@@ -168,9 +147,6 @@ abstract class Conveyor<T> {
     return ret != "" ? "$ret" : ret;
   }
 
-  ///
-  ///Same as [argsToString] but works with the query parameter only (why the API has a query parameter idk)
-  /// 
   static String queryArgToString(Map<String, dynamic> params) {
     String returnString = "";
     if (params == null) {

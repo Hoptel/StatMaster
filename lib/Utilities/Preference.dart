@@ -8,10 +8,6 @@ import '../AppConstants.dart';
 import '../Utilities/Models/login/LoginAuth.dart';
 import '../Utilities/Models/login/UserInfo.dart';
 
-///
-/// Preference controller. Uses secure storage and PrefService to allow the user to read or write preferences that
-/// require encryption and those that don't.
-///
 class Preference {
   static FlutterSecureStorage secureStorage;
 
@@ -146,18 +142,16 @@ class Preference {
     await setCurrentUser(null);
   }
 
-  ///the identifier here is [DBConst.FDN_CODE] from [Loginfo]
-  static Future editLoginAuth(LoginAuth loginAuth, String identifier) async {
+  static Future editLoginAuth(LoginAuth loginAuth, String userIdentifier) async {
     Map<String, LoginAuth> map = await getSecureLoginMap();
     map = map ?? Map<String, LoginAuth>();
-    map[identifier] = loginAuth;
+    map[userIdentifier] = loginAuth;
     await setSecureLoginMap(map);
   }
 
-  ///the identifier here is the code from [UserInfo]
-  static Future removeLoginAuth(String identifier) async {
+  static Future removeLoginAuth(String userIdentifier) async {
     Map<String, LoginAuth> map = await getSecureLoginMap();
-    map.remove(identifier);
+    map.remove(userIdentifier);
     await setSecureLoginMap(map);
   }
 
@@ -170,38 +164,33 @@ class Preference {
     await setSecureString(PreferenceKeys.code, userInfo.code);
     await setSecureInt(PreferenceKeys.hotelrefno, userInfo.hotelrefno);
     await setSecureString(PreferenceKeys.email, userInfo.email);
-    await setSecureString(PreferenceKeys.gid, userInfo.gid);
+    await setSecureString(PreferenceKeys.guid, userInfo.guid);
     await setSecureInt(PreferenceKeys.userid, userInfo.userid);
   }
 
-  static Future<LoginAuth> getLoginAuth({String identifier}) async {
+  static Future<LoginAuth> getLoginAuth({String userIdentifier}) async {
     LoginAuth value;
-    if (identifier == null) {
+    if (userIdentifier == null) {
       value = await getCurrentUser();
     } else {
       Map<String, LoginAuth> map = await getSecureLoginMap();
-      value = map[identifier];
+      value = map[userIdentifier];
     }
     return value;
   }
 
-  static Future<String> getAccessToken({String identifier}) async {
-    LoginAuth value = await getLoginAuth(identifier: identifier);
+  static Future<String> getAccessToken({String userIdentifier}) async {
+    LoginAuth value = await getLoginAuth(userIdentifier: userIdentifier);
     return value?.accessToken;
   }
 
-  static Future<String> getRefreshToken({String identifier}) async {
-    LoginAuth value = await getLoginAuth(identifier: identifier);
+  static Future<String> getRefreshToken({String userIdentifier}) async {
+    LoginAuth value = await getLoginAuth(userIdentifier: userIdentifier);
     return value?.refreshToken;
   }
 
-  static Future<String> getFirstIdentifier() async {
-    Map<String, LoginAuth> map = await getSecureLoginMap();
-    return map.isNotEmpty ? map.keys.first : null;
-  }
-
-  static Future<int> getExpiresIn({String identifier}) async {
-    LoginAuth value = await getLoginAuth(identifier: identifier);
+  static Future<int> getExpiresAt({String userIdentifier}) async {
+    LoginAuth value = await getLoginAuth(userIdentifier: userIdentifier);
     return value?.expiresIn;
   }
 

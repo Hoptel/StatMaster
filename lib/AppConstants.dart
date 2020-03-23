@@ -10,7 +10,7 @@ class PreferenceKeys {
   static const String code = "code";
   static const String hotelrefno = "hotelrefno";
   static const String email = "email";
-  static const String gid = "gid";
+  static const String guid = "guid";
   static const String id = "id";
   static const String shortcode = "shortcode";
   static const String userid = "userid";

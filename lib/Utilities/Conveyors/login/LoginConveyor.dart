@@ -19,7 +19,7 @@ class LoginConveyor extends Conveyor {
 
   Future<LoginAuth> _login(String username, String password) async {
     String _username = username;
-    Response responseAuth = await callService(HttpMethod.POST, '/auth/login', null,
+    Response responseAuth = await sendRequest(HttpMethod.POST, '/auth/login', null,
         requestBody: json.encode({
           'grant_type': 'password',
           'username': _username,
@@ -33,7 +33,7 @@ class LoginConveyor extends Conveyor {
   }
 
   @override
-  getEndpointName() => null;
+  getBlueprintName() => null;
 
   //if single user: go directly to current user and save stuff there, if no remember me, delete on next launch
   //if multi user: add new user to login map and current user, do not delete
@@ -62,9 +62,9 @@ class LoginConveyor extends Conveyor {
       {String refreshToken, String identifier, multiUser = false}) async {
     Preference.initialize();
     if (refreshToken == null) {
-      refreshToken = await Preference.getRefreshToken(identifier: identifier);
+      refreshToken = await Preference.getRefreshToken(userIdentifier: identifier);
     }
-    Response responseAuth = await callService(
+    Response responseAuth = await sendRequest(
       HttpMethod.POST,
       '/auth/login',
       null,
@@ -88,7 +88,7 @@ class LoginConveyor extends Conveyor {
   }
 
   Future<int> checkAuthCode() async {
-    Response responseUserInfo = await callService(
+    Response responseUserInfo = await sendRequest(
       HttpMethod.GET,
       "/user/info",
       await RequestHelper.getAuthHeader(),
@@ -97,7 +97,7 @@ class LoginConveyor extends Conveyor {
   }
 
   Future<ResponseBody> fetchUserInfo({Map<String, String> headers}) async {
-    Response responseUserInfo = await callService(
+    Response responseUserInfo = await sendRequest(
       HttpMethod.GET,
       "/user/info",
       headers ?? await RequestHelper.getAuthHeader(),

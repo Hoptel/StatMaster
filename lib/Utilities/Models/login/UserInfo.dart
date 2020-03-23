@@ -2,7 +2,7 @@ class UserInfo {
   int authlevel; //it's the same as scope from the other thing
   String code; //username
   String email;
-  String gid;
+  String guid;
   int hotelrefno;
   int id;
   String shortcode;
@@ -13,7 +13,7 @@ class UserInfo {
     this.authlevel,
     this.code,
     this.email,
-    this.gid,
+    this.guid,
     this.hotelrefno,
     this.id,
     this.shortcode,
@@ -25,7 +25,7 @@ class UserInfo {
       authlevel: json['authlevel'],
       code: json['code'],
       email: json['email'],
-      gid: json['gid'],
+      guid: json['gid'],
       hotelrefno: json['hotelrefno'],
       id: json['id'],
       shortcode: json['shortcode'],
@@ -41,7 +41,7 @@ class UserInfo {
           authlevel == other.authlevel &&
           code == other.code &&
           email == other.email &&
-          gid == other.gid &&
+          guid == other.guid &&
           hotelrefno == other.hotelrefno &&
           id == other.id &&
           shortcode == other.shortcode &&
@@ -52,12 +52,12 @@ class UserInfo {
       authlevel.hashCode ^
       code.hashCode ^
       email.hashCode ^
-      gid.hashCode ^
+      guid.hashCode ^
       hotelrefno.hashCode ^
       id.hashCode ^
       shortcode.hashCode ^
       userid.hashCode;
 
   @override
-  String toString() => "UserInfo{authlevel : $authlevel, code : $code, email : $email, gid : $gid, hotelrefno : $hotelrefno, id : $id, shortcode : $shortcode, userid : $userid}";
+  String toString() => "UserInfo{authlevel : $authlevel, code : $code, email : $email, gid : $guid, hotelrefno : $hotelrefno, id : $id, shortcode : $shortcode, userid : $userid}";
 }

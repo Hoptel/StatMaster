@@ -66,16 +66,8 @@ class LoginScreenState extends State<LoginScreen> {
             body: ListView(
               children: <Widget>[
                 Card(child: Container(height: 100,),),
-                /*Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                  Text(
-                    packageInfo != null ? packageInfo.version.toString() : "",
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 9.0, color: widget.firstTime ? _textDark : _textLight),
-                  )
-                ]),*/
                 SvgPicture.asset('/resources/image_assets/app_logo_foreground.svg',
                   width: widget.firstTime ? 300 : 185,
-                  //textColor: widget.firstTime ? Colors.white : _backgroundDark,
                 ),
                 Container(
                   height: logoPadding / 1.5,
@@ -147,29 +139,7 @@ class LoginScreenState extends State<LoginScreen> {
                                         context, 'LOGIN!!!',
                                         () async {
                                       await loginMethod(context, loginController);
-                                    }, onLongPress: () {
-                                      
-                                    })
-                            /* Padding(
-                              padding: const EdgeInsets.only(right: 14.0, top: 8.0),
-                              child: GestureDetector(
-                                onLongPress: () {
-                                  Navigator.of(context).pushNamed(RouteNames.preferenceScreen);
-                                },
-                                child: RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(width: 2.0, color: Theme.of(context).primaryColor)),
-                                  child: Text(
-                                    FlutterI18n.translate(context, StringsKeys.str_login),
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  onPressed: () {
-                                    loginMethod(context);
-                                  },
-                                ),
-                              ),
-                            )*/
+                                    }, )
                           ],
                         ),
                       ),
