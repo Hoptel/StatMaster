@@ -52,7 +52,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     LoginController loginController = LoginController();
-    double logoPadding = Utils.screenRealEstate(context, hasNavBar: false, hasAppBar: true) / 5;
+    double logoPadding = Utils.screenRealEstate(context, hasNavBar: false, hasAppBar: true) * 0.1;
     return Builder(
       builder: (context) => ScopedModel<LoginController>(
         model: loginController,
@@ -61,13 +61,12 @@ class LoginScreenState extends State<LoginScreen> {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: Scaffold(
-            appBar: AppBar(title:Text("StatMaster")),
+            //appBar: AppBar(title:Text("StatMaster")),
             key: _scaffoldKey,
             body: ListView(
               children: <Widget>[
-                Card(child: Container(height: 100,),),
-                SvgPicture.asset('/resources/image_assets/app_logo_foreground.svg',
-                  width: widget.firstTime ? 300 : 185,
+                SvgPicture.asset('resources/image_assets/app_logo_foreground.svg',
+                  width: Utils.screenWidth(context)-20.0,
                 ),
                 Container(
                   height: logoPadding / 1.5,
