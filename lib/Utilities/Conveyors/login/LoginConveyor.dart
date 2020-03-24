@@ -30,7 +30,6 @@ class LoginConveyor extends Conveyor {
           'password': password,
         }),null,null,Duration(seconds: 8)]))).catchError((error) {print(error);});
     if (responseAuth != null && responseAuth['statuscode'] == 200) {
-      print('if statement for responseAuth succeeded');
       return LoginAuth.fromJson(responseAuth);
     }
     return null;

@@ -93,7 +93,6 @@ abstract class Conveyor<T> {
     Map<String, dynamic> params = args[4];
     Map<String, dynamic> queries = args[5];
     Duration timeout = args[6];
-    print('no errors right before calling conveyor sendRequest');
     Response returnValue = await conveyor.sendRequest(method, endpointPath, headers, requestBody: requestBody, params: params, queries: queries, timeout: timeout);
     Map<String,dynamic>returnJson = jsonDecode(returnValue.body);
     returnJson['statuscode'] = returnValue.statusCode;
