@@ -56,7 +56,7 @@ abstract class Conveyor<T> {
         requestBody,
         Map<String, dynamic> params,
         Map<String, dynamic> queries,
-        Duration timeout = const Duration(seconds: 8),
+        Duration timeout,
       }) async {
     httpClient = httpClient ?? IOClient();
 
@@ -70,26 +70,34 @@ abstract class Conveyor<T> {
       future = clientFunctions[method](url, headers, requestBody);
 
       if (future != null) {
-        response = await future.timeout(timeout);
+        response = await future.timeout(timeout ?? Duration(seconds: 8));
 
-        if (response != null && Utils.isDEBUG) {
+        if (response != null) {
           printResponseLog(method, response, url);
           return response;
         }
       }
     } catch (exception) {
-      if (Utils.isDEBUG){
       print(exception);
-      Fluttertoast.showToast(msg: "${exception.toString()}");
-      }
+      //Fluttertoast.showToast(msg: "${exception.toString()}");
     }
     return null;
   }
 
-  static void sendRequestIsolate(Conveyor conveyor, HttpMethod method, String endpointPath, Map<String, String> headers, 
-  {requestBody, Map<String, dynamic> params, Map<String, dynamic> queries, Duration timeout})
-  {
-    conveyor.sendRequest(method, endpointPath, headers, requestBody: requestBody, params: params, queries: queries, timeout: timeout);
+  static Future<dynamic> sendRequestIsolate(Conveyor conveyor, List<dynamic> args) //this needs to have 7 elements, pass them as null if you have to
+  async {
+    HttpMethod method = args[0];
+    String endpointPath = args[1];
+    Map<String, String> headers = args[2];
+    var requestBody = args[3];
+    Map<String, dynamic> params = args[4];
+    Map<String, dynamic> queries = args[5];
+    Duration timeout = args[6];
+    print('no errors right before calling conveyor sendRequest');
+    Response returnValue = await conveyor.sendRequest(method, endpointPath, headers, requestBody: requestBody, params: params, queries: queries, timeout: timeout);
+    Map<String,dynamic>returnJson = jsonDecode(returnValue.body);
+    returnJson['statuscode'] = returnValue.statusCode;
+    return returnJson;
   }
 
   static void printRequest(

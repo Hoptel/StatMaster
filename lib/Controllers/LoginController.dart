@@ -21,6 +21,7 @@ class LoginController extends Model {
   bool showPassword = false;
   static bool isUserLoggedIn = false;
 
+
   String version = "";
   String buildNumber = "";
 

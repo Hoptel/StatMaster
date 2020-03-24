@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:worker_manager/executor.dart';
+import 'package:worker_manager/runnable.dart';
+import 'package:worker_manager/task.dart';
 
 import '../../Models/login/LoginAuth.dart';
 import '../../Models/login/UserInfo.dart';
@@ -19,15 +22,16 @@ class LoginConveyor extends Conveyor {
 
   Future<LoginAuth> _login(String username, String password) async {
     String _username = username;
-    Response responseAuth = await sendRequest(HttpMethod.POST, '/auth/login', null,
-        requestBody: json.encode({
+    Map<String, dynamic> responseAuth = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+     arg1:this, arg2:[ HttpMethod.POST, '/auth/login', null,
+        json.encode({
           'grant_type': 'password',
           'username': _username,
           'password': password,
-        }),);
-
-    if (responseAuth != null && responseAuth.statusCode == 200) {
-      return LoginAuth.fromJson(jsonDecode(responseAuth.body));
+        }),null,null,Duration(seconds: 8)]))).catchError((error) {print(error);});
+    if (responseAuth != null && responseAuth['statuscode'] == 200) {
+      print('if statement for responseAuth succeeded');
+      return LoginAuth.fromJson(responseAuth);
     }
     return null;
   }
