@@ -1,4 +1,3 @@
-import 'package:StatMaster/Utilities/Preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,28 +6,17 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../Controllers/LoginController.dart';
 import '../../theme.dart';
 import '../Widgets/EnsureVisibleWhenFocused.dart';
+import '../../Utilities/Preference.dart';
 import '../../Utilities/Utilities.dart';
 
-///Color palette for the 2 different login screens
-///
-/*const Color _backgroundDark = const Color(0xff1D2021);
-const Color _textDark = const Color(0x90ffffff);
-const Color _textLight = const Color(0x38000000);
-const Color _fieldDark = const Color(0xA0ffffff);
-const Color _fieldLight = const Color(0x58000000);
-const Color _logoLine3Red = const Color(0xff0c8281);*/
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({this.firstTime = true});
-
-  final bool firstTime;
   @override
   State<StatefulWidget> createState() {
     return LoginScreenState();
   }
 }
 
-//TODO https://proandroiddev.com/how-to-dynamically-change-the-theme-in-flutter-698bd022d0f0 set a login theme with dark brightness
 class LoginScreenState extends State<LoginScreen> {
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
@@ -40,14 +28,6 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-
-  void remember(bool value) {
-    rememberMe = value ?? false;
-    setState(() {
-      rememberMe = value ?? false;
-    });
   }
 
   @override
@@ -62,9 +42,9 @@ class LoginScreenState extends State<LoginScreen> {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: Scaffold(
-            //appBar: AppBar(title:Text("StatMaster")),
             key: _scaffoldKey,
             body: ListView(
+              physics: BouncingScrollPhysics(),
               children: <Widget>[
                 SvgPicture.asset('resources/image_assets/app_logo_foreground.svg',
                   width: Utils.screenWidth(context)-20.0,
@@ -186,10 +166,6 @@ Widget loginButton(BuildContext context, String text, Function callback, {Functi
     child: RaisedButton(
       elevation: 0,
       hoverElevation: 2,
-      /*shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-        side: BorderSide(width: 2.0, color: Theme.of(context).primaryColor)
-      ),*/
       onPressed: () {
         callback();
       },
@@ -197,24 +173,6 @@ Widget loginButton(BuildContext context, String text, Function callback, {Functi
         text, style: TextStyle(color: AppColors.secondaryLight),
       ),
       textColor: Colors.white,
-    ),
-  );
-}
-
-Widget goBackButton(BuildContext context, String text) {
-  return GestureDetector(
-    child: RaisedButton(
-      elevation: 0,
-      hoverElevation: 2,
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), side: BorderSide(width: 2.0)),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      child: Text(
-        text,
-      ),
     ),
   );
 }
