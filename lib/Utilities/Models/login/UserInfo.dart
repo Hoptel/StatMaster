@@ -25,7 +25,7 @@ class UserInfo {
       authlevel: json['authlevel'],
       code: json['code'],
       email: json['email'],
-      guid: json['gid'],
+      guid: json['guid'],
       hotelrefno: json['hotelrefno'],
       id: json['id'],
       shortcode: json['shortcode'],
@@ -59,5 +59,5 @@ class UserInfo {
       userid.hashCode;
 
   @override
-  String toString() => "UserInfo{authlevel : $authlevel, code : $code, email : $email, gid : $guid, hotelrefno : $hotelrefno, id : $id, shortcode : $shortcode, userid : $userid}";
+  String toString() => "UserInfo{authlevel : $authlevel, code : $code, email : $email, guid : $guid, hotelrefno : $hotelrefno, id : $id, shortcode : $shortcode, userid : $userid}";
 }

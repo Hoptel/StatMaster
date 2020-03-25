@@ -28,7 +28,7 @@ class LoginConveyor extends Conveyor {
           'grant_type': 'password',
           'username': _username,
           'password': password,
-        }),null,null,Duration(seconds: 8)]))).catchError((error) {print(error);});
+        }),null,null, null]))).catchError((error) {print(error);});
     if (responseAuth != null && responseAuth['statuscode'] == 200) {
       return LoginAuth.fromJson(responseAuth);
     }
@@ -46,7 +46,9 @@ class LoginConveyor extends Conveyor {
     if (responseAuth != null) {
       ResponseBody userInfoResult =
           await fetchUserInfo(headers: {'Authorization': "Bearer ${responseAuth.accessToken}"});
+          print(userInfoResult.data.runtimeType);
       UserInfo userInfo = UserInfo.fromJson(userInfoResult.data);
+      print(userInfo.toString());
       if (multiUser) {
         Preference.editLoginAuth(responseAuth, userInfo.code);
         Preference.setCurrentUser(responseAuth);
@@ -67,18 +69,19 @@ class LoginConveyor extends Conveyor {
     if (refreshToken == null) {
       refreshToken = await Preference.getRefreshToken(userIdentifier: identifier);
     }
-    Response responseAuth = await sendRequest(
+    Map<String, dynamic> responseAuth = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+     arg1:this, arg2:[ 
       HttpMethod.POST,
       '/auth/login',
       null,
-      requestBody: {
+      json.encode({
         'grant_type': 'refresh_token',
         'refresh_token': refreshToken,
-      },
-    );
+      }),
+    null,null, null]))).catchError((error) {print(error);});
 
-    if (responseAuth != null && responseAuth.statusCode == 200) {
-      LoginAuth loginAuth = LoginAuth.fromJson(json.decode(responseAuth.body));
+    if (responseAuth != null && responseAuth['statuscode'] == 200) {
+      LoginAuth loginAuth = LoginAuth.fromJson(responseAuth);
       await Preference.setCurrentUser(loginAuth);
       ResponseBody userInfoResult = await fetchUserInfo();
       UserInfo loginfo = UserInfo.fromJson(userInfoResult.data);
@@ -100,14 +103,15 @@ class LoginConveyor extends Conveyor {
   }
 
   Future<ResponseBody> fetchUserInfo({Map<String, String> headers}) async {
-    Response responseUserInfo = await sendRequest(
+    Map<String, dynamic> responseUserInfo = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+     arg1:this, arg2:[ 
       HttpMethod.GET,
       "/user/info",
-      headers ?? await RequestHelper.getAuthHeader(),
-    );
+      headers ?? await RequestHelper.getAuthHeader(), null, null, null, null
+     ]))).catchError((error) {print(error);});
 
-    if (responseUserInfo != null && responseUserInfo.statusCode == 200) {
-      var resp = ResponseBody.fromJson(json.decode(responseUserInfo.body));
+    if (responseUserInfo != null && responseUserInfo['statuscode'] == 200) {
+      var resp = ResponseBody.fromJson(responseUserInfo);
       await Preference.setUserInfo(UserInfo.fromJson(resp.data));
       return resp;
     } else {

@@ -1,3 +1,4 @@
+import 'package:StatMaster/Utilities/Preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -162,6 +163,7 @@ class LoginScreenState extends State<LoginScreen> {
     await model.loginRequest(usernameController.text, _password, rememberMe);
     if (model.isSuccess) {
       print('SUCCESS!!');
+      print(await Preference.getSecureString('guid'));
     } else {
       showSnackBar();
     }
