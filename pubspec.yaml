@@ -20,7 +20,7 @@ dependencies:
   preferences: ^5.0.1  
   scoped_model: ^1.0.1
   flutter_svg: ^0.14.3
-  worker_manager: ^2.3.8
+  worker_manager: 2.3.8
 
 
 
