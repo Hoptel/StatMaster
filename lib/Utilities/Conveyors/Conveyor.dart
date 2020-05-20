@@ -1,26 +1,28 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:worker_manager/worker_manager.dart';
 
 import '../Utilities.dart';
+import 'RequestHelper.dart';
 
 ///
 /// Defines what methods the app can use to call an API
 ///
-enum HttpMethod {GET, HEAD, POST, PUT, PATCH, DELETE}
+enum HttpMethod { GET, HEAD, POST, PUT, PATCH, DELETE }
 
 const String serviceDateFormat = "yyyy-MM-dd";
-const String serviceTimeFormat = "HH:mm";
-const String serviceDateTimeFormat = "$serviceDateFormat $serviceTimeFormat";
+const String serviceTimeFormat = "HH:mm:ss";
+const String serviceDateTimeFormat = "${serviceDateFormat}T$serviceTimeFormat";
 
 abstract class Conveyor<T> {
   ///
   /// this returns the API's URL
   ///
-  static const String serverUrl = 'http://10.0.2.2:5000/forest';
+  static const String serverUrl = Utils.isDEBUG ? 'http://10.0.2.2:5000' : 'https://reampt.com/forest';
 
   ///
   ///This is used to get the API's module or blueprint URL
@@ -32,16 +34,24 @@ abstract class Conveyor<T> {
   ///
   T createObject(Map<String, dynamic> input);
 
+  List<T> createObjectList(List<dynamic> input) {
+    List<T> returnList = [];
+    for (var item in input) {
+      returnList.add(createObject(item as Map<String, dynamic>));
+    }
+    return returnList;
+  }
+
   ///
   ///These are the methods used to send the requests
   ///
   static Map<HttpMethod, dynamic> clientFunctions = {
-  HttpMethod.GET: (url, headers, requestBody) => httpClient.get(url, headers: headers),
-  HttpMethod.HEAD: (url, headers, requestBody) => httpClient.head(url, headers: headers),
-  HttpMethod.POST: (url, headers, requestBody) => httpClient.post(url, body: requestBody, headers: headers),
-  HttpMethod.PUT: (url, headers, requestBody) => httpClient.put(url, body: requestBody, headers: headers),
-  HttpMethod.PATCH: (url, headers, requestBody) => httpClient.patch(url, body: requestBody, headers: headers),
-  HttpMethod.DELETE: (url, headers, requestBody) => httpClient.delete(url, headers: headers),
+    HttpMethod.GET: (url, headers, requestBody) => httpClient.get(url, headers: headers),
+    HttpMethod.HEAD: (url, headers, requestBody) => httpClient.head(url, headers: headers),
+    HttpMethod.POST: (url, headers, requestBody) => httpClient.post(url, body: requestBody, headers: headers),
+    HttpMethod.PUT: (url, headers, requestBody) => httpClient.put(url, body: requestBody, headers: headers),
+    HttpMethod.PATCH: (url, headers, requestBody) => httpClient.patch(url, body: requestBody, headers: headers),
+    HttpMethod.DELETE: (url, headers, requestBody) => httpClient.delete(url, headers: headers),
   };
 
   static IOClient httpClient;
@@ -49,15 +59,15 @@ abstract class Conveyor<T> {
   ///
   ///This method sends the request and returns the response, please don't put sensitive data in the bloody parameters
   ///
-   Future<Response> sendRequest(
-      HttpMethod method,
-      String endpointPath,
-      Map<String, String> headers, {
-        requestBody,
-        Map<String, dynamic> params,
-        Map<String, dynamic> queries,
-        Duration timeout,
-      }) async {
+  Future<Response> sendRequest(
+    HttpMethod method,
+    String endpointPath,
+    Map<String, String> headers, {
+    requestBody,
+    Map<String, dynamic> params,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
     httpClient = httpClient ?? IOClient();
 
     String url = (serverUrl + (getBlueprintName() ?? "") + endpointPath + fullArgsToString(params, queries));
@@ -84,7 +94,17 @@ abstract class Conveyor<T> {
     return null;
   }
 
-  static Future<dynamic> sendRequestIsolate(Conveyor conveyor, List<dynamic> args) //this needs to have 7 elements, pass them as null if you have to
+  static Future<dynamic> sendRequestIsolate(
+      Conveyor conveyor, List<dynamic> args) //this needs to have 7 elements, pass them as null if you have to
+  async {
+    Response returnValue = await sendRequestIsolateBare(conveyor, args);
+    Map<String, dynamic> returnJson = jsonDecode(returnValue.body);
+    returnJson['statuscode'] = returnValue.statusCode;
+    return returnJson;
+  }
+
+  static Future<Response> sendRequestIsolateBare(
+      Conveyor conveyor, List<dynamic> args) //this needs to have 7 elements, pass them as null if you have to
   async {
     HttpMethod method = args[0];
     String endpointPath = args[1];
@@ -93,18 +113,130 @@ abstract class Conveyor<T> {
     Map<String, dynamic> params = args[4];
     Map<String, dynamic> queries = args[5];
     Duration timeout = args[6];
-    Response returnValue = await conveyor.sendRequest(method, endpointPath, headers, requestBody: requestBody, params: params, queries: queries, timeout: timeout);
-    Map<String,dynamic>returnJson = jsonDecode(returnValue.body);
-    returnJson['statuscode'] = returnValue.statusCode;
-    return returnJson;
+    Response returnValue = await conveyor.sendRequest(method, endpointPath, headers,
+        requestBody: requestBody, params: params, queries: queries, timeout: timeout);
+    return returnValue;
+  }
+
+  Future<List<T>> sendGet({
+    String endpointPath = "",
+    Map<String, String> headers,
+    Map<String, dynamic> params,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
+    Map<String, dynamic> jsonMap = await Executor().execute(fun2: Conveyor.sendRequestIsolate, arg1: this, arg2: [
+      HttpMethod.GET,
+      endpointPath,
+      headers ?? await RequestHelper.getAuthHeader(),
+      null,
+      params,
+      queries,
+      timeout
+    ]);
+    if (jsonMap != null && jsonMap['statuscode'] == 200)
+      return createObjectList(jsonMap['data']);
+    else
+      return null;
+  }
+
+  Future<T> sendGetOne({
+    String endpointPath = "",
+    @required int id,
+    Map<String, String> headers,
+    Map<String, dynamic> params,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
+    Map<String, dynamic> jsonMap = await Executor().execute(fun2: Conveyor.sendRequestIsolate, arg1: this, arg2: [
+      HttpMethod.GET,
+      "$endpointPath/$id",
+      headers ?? await RequestHelper.getAuthHeader(),
+      null,
+      params,
+      queries,
+      timeout
+    ]);
+    if (jsonMap != null && jsonMap['statuscode'] == 200)
+      return createObject(jsonMap['data']);
+    else
+      return null;
+  }
+
+  Future<T> sendPost({
+    String endpointPath = "",
+    var requestBody,
+    Map<String, String> headers,
+    Map<String, dynamic> params,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
+    Map<String, dynamic> jsonMap = await Executor().execute(fun2: Conveyor.sendRequestIsolate, arg1: this, arg2: [
+      HttpMethod.POST,
+      endpointPath,
+      headers ?? await RequestHelper.getPostHeaders(),
+      requestBody,
+      params,
+      queries,
+      timeout
+    ]);
+    if (jsonMap != null && jsonMap['statuscode'] == 201)
+      return createObject(jsonMap['data']);
+    else
+      return null;
+  }
+
+  Future<T> sendPatch({
+    String endpointPath = "",
+    var requestBody,
+    Map<String, String> headers,
+    String guid,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
+    Map<String, dynamic> jsonMap = await Executor().execute(fun2: Conveyor.sendRequestIsolate, arg1: this, arg2: [
+      HttpMethod.PATCH,
+      endpointPath,
+      headers ?? await RequestHelper.getPostHeaders(),
+      requestBody,
+      {"guid", guid},
+      queries,
+      timeout
+    ]);
+    if (jsonMap != null && jsonMap['statuscode'] == 200)
+      return createObject(jsonMap['data']);
+    else
+      return null;
+  }
+
+  Future<bool> sendDelete({
+    String endpointPath = "",
+    Map<String, String> headers,
+    String guid,
+    Map<String, dynamic> queries,
+    Duration timeout,
+  }) async {
+    Map<String, dynamic> jsonMap = await Executor().execute(fun2: Conveyor.sendRequestIsolate, arg1: this, arg2: [
+      HttpMethod.GET,
+      endpointPath,
+      headers ?? await RequestHelper.getAuthHeader(),
+      null,
+      {"guid", guid},
+      queries,
+      timeout
+    ]);
+    if (jsonMap != null && jsonMap['statuscode'] == 200)
+      return true;
+    else
+      return false;
   }
 
   static void printRequest(
-      String url,
-      HttpMethod method,
-      headers,
-      requestBody,
-      ) {
+    String url,
+    HttpMethod method,
+    headers,
+    requestBody,
+  ) {
     String httpMethod = method != null ? method.toString().substring(11) : "";
     String header = headers != null ? headers.toString() + "\n" : "";
     String returnString = "▲▲▲ $httpMethod $url\n$header\n";
@@ -143,6 +275,7 @@ abstract class Conveyor<T> {
     return returnString;
   }
 
+  //TODO this logic is bad and inefficient
   static String argsToString(Map<String, dynamic> params) {
     String ret = "";
     if (params == null) {

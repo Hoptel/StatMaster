@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:worker_manager/executor.dart';
-import 'package:worker_manager/runnable.dart';
-import 'package:worker_manager/task.dart';
+import 'package:worker_manager/worker_manager.dart';
 
 import '../../Models/login/LoginAuth.dart';
 import '../../Models/login/UserInfo.dart';
@@ -22,13 +20,13 @@ class LoginConveyor extends Conveyor {
 
   Future<LoginAuth> _login(String username, String password) async {
     String _username = username;
-    Map<String, dynamic> responseAuth = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+    Map<String, dynamic> responseAuth = await Executor().execute(fun2: Conveyor.sendRequestIsolate,
      arg1:this, arg2:[ HttpMethod.POST, '/auth/login', null,
         json.encode({
           'grant_type': 'password',
           'username': _username,
           'password': password,
-        }),null,null, null]))).catchError((error) {print(error);});
+        }),null,null, null]).catchError((error) {print(error);});
     if (responseAuth != null && responseAuth['statuscode'] == 200) {
       return LoginAuth.fromJson(responseAuth);
     }
@@ -69,7 +67,7 @@ class LoginConveyor extends Conveyor {
     if (refreshToken == null) {
       refreshToken = await Preference.getRefreshToken(userIdentifier: identifier);
     }
-    Map<String, dynamic> responseAuth = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+    Map<String, dynamic> responseAuth = await Executor().execute(fun2: Conveyor.sendRequestIsolate,
      arg1:this, arg2:[ 
       HttpMethod.POST,
       '/auth/login',
@@ -78,7 +76,7 @@ class LoginConveyor extends Conveyor {
         'grant_type': 'refresh_token',
         'refresh_token': refreshToken,
       }),
-    null,null, null]))).catchError((error) {print(error);});
+    null,null, null]).catchError((error) {print(error);});
 
     if (responseAuth != null && responseAuth['statuscode'] == 200) {
       LoginAuth loginAuth = LoginAuth.fromJson(responseAuth);
@@ -103,12 +101,12 @@ class LoginConveyor extends Conveyor {
   }
 
   Future<ResponseBody> fetchUserInfo({Map<String, String> headers}) async {
-    Map<String, dynamic> responseUserInfo = await Executor().addTask(task: Task(runnable: Runnable(fun2: Conveyor.sendRequestIsolate,
+    Map<String, dynamic> responseUserInfo = await Executor().execute(fun2: Conveyor.sendRequestIsolate,
      arg1:this, arg2:[ 
       HttpMethod.GET,
       "/user/info",
       headers ?? await RequestHelper.getAuthHeader(), null, null, null, null
-     ]))).catchError((error) {print(error);});
+     ]).catchError((error) {print(error);});
 
     if (responseUserInfo != null && responseUserInfo['statuscode'] == 200) {
       var resp = ResponseBody.fromJson(responseUserInfo);

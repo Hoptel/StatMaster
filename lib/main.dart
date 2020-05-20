@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:worker_manager/executor.dart';
+import 'package:worker_manager/worker_manager.dart';
 
 import 'Utilities/Preference.dart';
 import 'View/Screens/LoginScreen.dart';
