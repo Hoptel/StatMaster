@@ -33,7 +33,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     LoginController loginController = LoginController();
-    double logoPadding = Utils.screenRealEstate(context, hasNavBar: false, hasAppBar: true) * 0.1;
+    double logoPadding = Utils.screenRealEstate(context, hasNavBar: false, hasAppBar: false) * 0.1;
     return Builder(
       builder: (context) => ScopedModel<LoginController>(
         model: loginController,

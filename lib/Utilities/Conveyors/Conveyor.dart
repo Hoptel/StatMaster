@@ -19,19 +19,10 @@ const String serviceTimeFormat = "HH:mm:ss";
 const String serviceDateTimeFormat = "${serviceDateFormat}T$serviceTimeFormat";
 
 abstract class Conveyor<T> {
-  ///
-  /// this returns the API's URL
-  ///
-  static const String serverUrl = Utils.isDEBUG ? 'http://10.0.2.2:5000' : 'https://reampt.com/forest';
+  static const String serverUrl = 'http://10.0.2.2:5000/forest';
 
-  ///
-  ///This is used to get the API's module or blueprint URL
-  ///
   String getBlueprintName();
 
-  ///
-  ///This is used to generate models and return them
-  ///
   T createObject(Map<String, dynamic> input);
 
   List<T> createObjectList(List<dynamic> input) {
@@ -56,18 +47,15 @@ abstract class Conveyor<T> {
 
   static IOClient httpClient;
 
-  ///
-  ///This method sends the request and returns the response, please don't put sensitive data in the bloody parameters
-  ///
-  Future<Response> sendRequest(
-    HttpMethod method,
-    String endpointPath,
-    Map<String, String> headers, {
-    requestBody,
-    Map<String, dynamic> params,
-    Map<String, dynamic> queries,
-    Duration timeout,
-  }) async {
+   Future<Response> sendRequest(
+      HttpMethod method,
+      String endpointPath,
+      Map<String, String> headers, {
+        requestBody,
+        Map<String, dynamic> params,
+        Map<String, dynamic> queries,
+        Duration timeout,
+      }) async {
     httpClient = httpClient ?? IOClient();
 
     String url = (serverUrl + (getBlueprintName() ?? "") + endpointPath + fullArgsToString(params, queries));
@@ -89,7 +77,6 @@ abstract class Conveyor<T> {
       }
     } catch (exception) {
       print(exception);
-      //Fluttertoast.showToast(msg: "${exception.toString()}");
     }
     return null;
   }
