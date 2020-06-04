@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
     primaryColorBrightness: Brightness.dark,
     appBarTheme: AppBarTheme(
       brightness:Brightness.dark,
-      color:Color(0xff1c2327),
+      color:Color(0xFF262F35),
       elevation:0.0,
       iconTheme:null,
       actionsIconTheme:null,
@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
     accentColorBrightness: Brightness.dark,
     canvasColor: Color( 0xff1c2327 ),
     scaffoldBackgroundColor: Color( 0xff1c2327 ),
-    bottomAppBarColor: Color( 0xff1c2327 ),
+    bottomAppBarColor: Color( 0xFF262F35 ),
     cardColor: Color( 0xff242D32 ),
     dividerColor: Color( 0x1fffffff ),
     highlightColor: Color( 0x40cccccc ),

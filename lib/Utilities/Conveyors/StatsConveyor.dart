@@ -5,48 +5,47 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-import '../../Models/SingleDataResult.dart';
-import '../../Models/stats/gen/Rev.dart';
-import '../../Models/stats/gen/Sales.dart';
-import '../RequestHelper.dart';
-import '../ServiceFactory.dart';
+import '../Models/Rev.dart';
+import '../Models/Sales.dart';
+import 'RequestHelper.dart';
+import 'Conveyor.dart';
 
-class StatsService extends ServiceFactory {
-  static StatsService instance;
+class StatsConveyor extends Conveyor {
+  static StatsConveyor instance;
 
   @override
-  createObject(String input) {
+  createObject(input) {
     return null;
   }
 
   @override
-  String getEndpointName() {
-    return "stats";
+  String getBlueprintName() {
+    return "stat";
   }
 
-  static StatsService getInstance() {
-    return instance != null ? instance : StatsService();
+  static StatsConveyor getInstance() {
+    return instance != null ? instance : StatsConveyor();
   }
 
   Future<Rev> getGenRev(DateTime startDate, DateTime endDate, {Map<String, String> headers}) async {
     Response response =
-        await callService(HttpMethod.GET, "/gen/rev", headers ?? await RequestHelper.getAuthHeader(), params: {
+        await sendRequest(HttpMethod.GET, "/gen/revenue", headers ?? await RequestHelper.getAuthHeader(), params: {
       'startdate': DateFormat(serviceDateFormat).format(startDate),
       'enddate': DateFormat(serviceDateFormat).format(endDate)
     });
     return response != null && response.statusCode == 200
-        ? SingleDataResult<Rev>.fromJson(json.decode(response.body)).data
+        ? Rev.fromJson(json.decode(response.body)['data'])
         : null;
   }
 
   Future<Sales> getGenSales(DateTime startDate, DateTime endDate, {Map<String, String> headers}) async {
     Response response =
-        await callService(HttpMethod.GET, "/gen/sales", headers ?? await RequestHelper.getAuthHeader(), params: {
+        await sendRequest(HttpMethod.GET, "/gen/sales", headers ?? await RequestHelper.getAuthHeader(), params: {
       'startdate': DateFormat(serviceDateFormat).format(startDate),
       'enddate': DateFormat(serviceDateFormat).format(endDate)
     });
     return response != null && response.statusCode == 200
-        ? SingleDataResult<Sales>.fromJson(json.decode(response.body)).data
+        ? Sales.fromJson(json.decode(response.body)['data'])
         : null;
   }
 

@@ -110,7 +110,7 @@ class DateFilterCard extends StatelessWidget {
                             child: Icon(
                               FontAwesomeIcons.chevronLeft,
                               size: scaleFactor * 18,
-                              color: Color(0xFF752222),
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -151,7 +151,7 @@ class DateFilterCard extends StatelessWidget {
                             child: Icon(
                               FontAwesomeIcons.chevronRight,
                               size: scaleFactor * 18,
-                              color: Color(0xFF752222),
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -206,7 +206,7 @@ void moveDate(bool forward) {
 Widget filterButton(BuildContext context, Widget filterName,
     {BorderRadius borderRadius = const BorderRadius.all(Radius.circular(0.0)), Function callback}) {
   return Container(
-    decoration: BoxDecoration(color: Theme.of(context).selectedRowColor, borderRadius: borderRadius),
+    decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: borderRadius),
     child: Material(
       color: Colors.transparent,
       child: InkWell(

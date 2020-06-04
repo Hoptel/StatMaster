@@ -1,3 +1,4 @@
+import 'package:StatMaster/Controllers/EmployeeController.dart';
 import 'package:StatMaster/Controllers/MainController.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -27,6 +28,7 @@ class WidgetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MainController.getInstance().setEmployeeController(EmployeeController());
     MainController.getInstance().setReservatController(ReservatController());
     MainController.getInstance().setStatsController(StatsController());
     ReservatController reservatController = MainController.getInstance().reservatController;
@@ -129,13 +131,6 @@ class WidgetsScreen extends StatelessWidget {
                                 title: "Revenue",
                                 icon: FontAwesomeIcons.moneyBillWave,
                                 miniWidgets: <MiniWidget>[
-                                  MiniWidget(
-                                      title: "Net Total",
-                                      data: ScopedModelDescendant<StatsController>(builder: (context, child, model) {
-                                        return model.revDataLoaded
-                                            ? miniWidgetDataNumber(model.revData.nettotal)
-                                            : Container();
-                                      })),
                                   MiniWidget(
                                       title: "Room Revenue",
                                       data: ScopedModelDescendant<StatsController>(builder: (context, child, model) {

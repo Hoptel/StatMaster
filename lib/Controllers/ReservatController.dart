@@ -1,6 +1,7 @@
-import '../Utilities/Models/reserv/ForecastDay.dart';
-import '../Utilities/Models/reserv/ForecastTotals.dart';
-import '../Utilities/Services/reserv/ReservatService.dart';
+import 'package:StatMaster/Utilities/Conveyors/ReservatConveyor.dart';
+
+import '../Utilities/Models/ForecastDay.dart';
+import '../Utilities/Models/ForecastTotals.dart';
 import 'package:preferences/preference_service.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -29,7 +30,7 @@ class ReservatController extends Model {
   ReservatController() : this.hotelrefno = PrefService.getInt("hotelrefno");
 
   Future getOccupancyForecastsOnly({DateTime start, DateTime end}) async {
-    forecastDayListOnly = await ReservatService.getInstance().getForecastDay(start, end);
+    forecastDayListOnly = await ReservatConveyor.getInstance().getForecastDay(start, end);
     forecastDayListOnlyLoaded = forecastDayListOnly.isNotEmpty;
     notifyListeners();
   }
@@ -48,7 +49,7 @@ class ReservatController extends Model {
     start = start ?? DateTime(tempDate.year - 1, 1, 1);
     end = end ?? DateTime(tempDate.year + 1, 1, 1);
 
-    forecastDayList = await ReservatService.getInstance().getForecastDay(start, end);
+    forecastDayList = await ReservatConveyor.getInstance().getForecastDay(start, end);
     if (forecastDayList != null) {
       forecastDayListLoaded = true;
       hotelCapRoom = forecastDayList.first.totalcaproom.toDouble();
@@ -108,7 +109,7 @@ class ReservatController extends Model {
   }
 
   Future getOCCData(DateTime startDate, DateTime endDate) async {
-    List<ForecastTotals> forecastTotals = await ReservatService.getInstance().getForecastTotals(startDate, endDate);
+    List<ForecastTotals> forecastTotals = await ReservatConveyor.getInstance().getForecastTotals(startDate, endDate);
     if (forecastTotals != null && forecastTotals.isNotEmpty) {
       occData = forecastTotals.first;
       notifyListeners();

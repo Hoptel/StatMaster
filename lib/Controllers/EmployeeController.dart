@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:StatMaster/Utilities/Conveyors/DBFileConveyor.dart';
+import 'package:StatMaster/Utilities/Conveyors/EmployeeConveyor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hotech_flutter_utilities/Constants.dart';
-import 'package:hotech_flutter_utilities/Preference.dart';
-import 'package:hotech_flutter_utilities/model/hr/Employee.dart';
-import 'package:hotech_flutter_utilities/model/hr/EmployeeHotel.dart';
-import 'package:hotech_flutter_utilities/model/tools/Rafile.dart';
-import 'package:hotech_flutter_utilities/service/hr/EmployeeService.dart';
-import 'package:hotech_flutter_utilities/service/rafile/RafileService.dart';
+import '../Utilities/Preference.dart';
+import '../Utilities/Models/Employee.dart';
+import '../Utilities/Models/EmployeeHotel.dart';
+import '../Utilities/Models/DBFile.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class EmployeeController extends Model {
@@ -30,8 +29,8 @@ class EmployeeController extends Model {
       _employeeDataLoading = true;
       List<String> loginList = await Preference.getSecureLoginMap().then((value) => value.keys.toList());
       for (String code in loginList) {
-        List<Employee> employeeList = await EmployeeService.getInstance().getViewList(
-            params: {DBConst.FDN_MATCH: true, DBConst.FDN_ALLHOTELS: true}, queries: {DBConst.FDN_CODE: code});
+        List<Employee> employeeList = await EmployeeConveyor.getInstance().sendGet(
+            queries: {"code": code});
         if (employeeList.isNotEmpty) {
           employeeData[code] = (employeeList.first);
         } else {
@@ -49,9 +48,11 @@ class EmployeeController extends Model {
 
   Future<Employee> getCurrentEmployee() async {
     int identifier = await Preference.getUserID();
+    print("IDENIDENIDENIDEN");
+    print(identifier);
     Employee currentEmp;
     for (Employee emp in employeeData.values) {
-      if (emp.id == identifier) {
+      if (emp.userid == identifier) {
         currentEmp = emp;
         break;
       }
@@ -61,7 +62,7 @@ class EmployeeController extends Model {
 
   Future getEmployeeHotels() async {
     if (!employeeHotelsLoaded) {
-      employeeHotels = await EmployeeService.getInstance().getEmpHotelList();
+      employeeHotels = await EmployeeConveyor.getInstance().getEmpHotelList();
       if (employeeHotels.isNotEmpty) {
         employeeHotels = employeeHotels.where((employeeHotel) {
           return employeeHotel.hotelrefno != -1;
@@ -75,12 +76,12 @@ class EmployeeController extends Model {
   Future getEmployeeImages() async {
     if (!employeeImagesLoaded) {
       for (Employee employee in employeeData.values) {
-        List<Rafile> files =
-            await RafileService().getViewList(queries: {DBConst.FDN_MASTERID: employee.mid, DBConst.FDN_CODE: "PHOTO"});
+        List<DBFile> files =
+            await DBFileConveyor().sendGet(queries: {"masterid": employee.guid, "code": "PHOTO"});
         if (files.isNotEmpty) {
-          Rafile file = files?.first;
-          File downloadFile = await RafileService.getInstance()
-              .download(file, employee.mid, params: {DBConst.FDN_MID: employee.mid, DBConst.FDN_CODE: file.code});
+          DBFile file = files?.first;
+          File downloadFile = await DBFileConveyor.getInstance()
+              .download(employee.guid, file.code);
           employeeImages[employee.code] = FileImage(downloadFile);
         }
         if (employeeImages.isNotEmpty) {

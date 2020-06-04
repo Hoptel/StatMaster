@@ -1,6 +1,6 @@
-import '../Utilities/Models/stats/gen/Rev.dart';
-import '../Utilities/Models/stats/gen/Sales.dart';
-import 'package:hotech_flutter_utilities/service/stats/StatsService.dart';
+import 'package:StatMaster/Utilities/Conveyors/StatsConveyor.dart';
+import '../Utilities/Models/Rev.dart';
+import '../Utilities/Models/Sales.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 ///Controls the stats gen rev and sales data (it gets the data from HF-Utilities library and puts it in variables)
@@ -17,7 +17,7 @@ class StatsController extends Model {
     if (!revDataLoaded && !revDataLoading) {
       revDataLoading = true;
       notifyListeners();
-      revData = await StatsService.getInstance().getGenRev(startDate, endDate);
+      revData = await StatsConveyor.getInstance().getGenRev(startDate, endDate);
       if (revData != null) {
         revDataLoaded = true;
       }
@@ -30,7 +30,7 @@ class StatsController extends Model {
     if (!salesDataLoaded && !salesDataLoading) {
       salesDataLoading = true;
       notifyListeners();
-      salesData = await StatsService.getInstance().getGenSales(startDate, endDate);
+      salesData = await StatsConveyor.getInstance().getGenSales(startDate, endDate);
       if (salesData != null) {
         salesDataLoaded = true;
       }

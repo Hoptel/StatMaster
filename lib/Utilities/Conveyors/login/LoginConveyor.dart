@@ -70,7 +70,7 @@ class LoginConveyor extends Conveyor {
     Map<String, dynamic> responseAuth = await Executor().execute(fun2: Conveyor.sendRequestIsolate,
      arg1:this, arg2:[ 
       HttpMethod.POST,
-      '/auth/login',
+      'auth/login',
       null,
       json.encode({
         'grant_type': 'refresh_token',
@@ -94,7 +94,7 @@ class LoginConveyor extends Conveyor {
   Future<int> checkAuthCode() async {
     Response responseUserInfo = await sendRequest(
       HttpMethod.GET,
-      "/user/info",
+      "user/info",
       await RequestHelper.getAuthHeader(),
     );
     return responseUserInfo.statusCode;
@@ -111,6 +111,8 @@ class LoginConveyor extends Conveyor {
     if (responseUserInfo != null && responseUserInfo['statuscode'] == 200) {
       var resp = ResponseBody.fromJson(responseUserInfo);
       await Preference.setUserInfo(UserInfo.fromJson(resp.data));
+      print("IDIDIIDIDIDIDIDIDIID");
+      print(await Preference.getUserID());
       return resp;
     } else {
       return null;

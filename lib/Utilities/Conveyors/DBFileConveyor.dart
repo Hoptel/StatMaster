@@ -22,7 +22,7 @@ class DBFileConveyor extends Conveyor<DBFile> {
 
   @override
   String getBlueprintName() {
-    return '/dbfile';
+    return 'dbfile';
   }
 
   Future<File> download(String masterID, String code) async {
@@ -64,7 +64,7 @@ class DBFileConveyor extends Conveyor<DBFile> {
     Directory direcc = Directory(thingpath + "/assets");
     direcc.createSync(recursive: true);
     file.writeAsBytesSync(file.readAsBytesSync());
-    await Executor().execute(fun3: sendRequestt, arg1: file, arg2: arg2list, arg3: headers).value;
+    await Executor().execute(fun3: sendRequestt, arg1: file, arg2: arg2list, arg3: headers);
   }
 
   static Future<dynamic> sendRequestt(File file, List<String> arglist, Map<String, dynamic> headers) async {

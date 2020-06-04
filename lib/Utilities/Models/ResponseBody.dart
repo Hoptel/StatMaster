@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ResponseBody {
   final bool success;
   final String msg;

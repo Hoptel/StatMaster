@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import '../../Utilities/Utilities.dart';
 import 'package:intl/intl.dart';
 
-import '../../theme.dart';
-
 class GaugeChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
@@ -129,7 +127,7 @@ class GaugeSegment {
 
 Widget GaugeChartWithNumber(
     double valueFull, double valueEmpty, Color fullColor, Color emptyColor, BuildContext context,
-    {int width, double textSize = 17}) {
+    {int width = 5, double textSize = 17}) {
   double _resizeFactor = Utils.screenWidth(context) / GaugeChart._dScreenWidth;
   return Container(
     child: Stack(

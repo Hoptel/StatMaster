@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:flutter/widgets.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../Utilities/Preference.dart';

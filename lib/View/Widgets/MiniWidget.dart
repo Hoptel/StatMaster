@@ -33,7 +33,7 @@ class MiniWidget extends StatelessWidget {
             child: Card(
               margin: EdgeInsets.all(0.0),
               elevation: 0.0,
-              color: Color(0xfff5f5f5),
+              color: Color(0x20f5f5f5),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
               child: Center(child: data),
             ),

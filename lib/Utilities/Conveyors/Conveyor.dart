@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:worker_manager/worker_manager.dart';
-
-import '../Utilities.dart';
 import 'RequestHelper.dart';
 
 ///
@@ -19,7 +17,7 @@ const String serviceTimeFormat = "HH:mm:ss";
 const String serviceDateTimeFormat = "${serviceDateFormat}T$serviceTimeFormat";
 
 abstract class Conveyor<T> {
-  static const String serverUrl = 'http://10.0.2.2:5000/forest';
+  static const String serverUrl = 'http://10.0.2.2:5000/';
 
   String getBlueprintName();
 

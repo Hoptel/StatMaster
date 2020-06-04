@@ -1,3 +1,4 @@
+import 'package:StatMaster/View/Screens/WidgetsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -144,6 +145,7 @@ class LoginScreenState extends State<LoginScreen> {
     if (model.isSuccess) {
       print('SUCCESS!!');
       print(await Preference.getSecureString('guid'));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => WidgetsScreen()), (route) => false);
     } else {
       showSnackBar();
     }

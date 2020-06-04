@@ -25,44 +25,6 @@ class AppDrawer extends StatelessWidget {
               "Home",
             ),
           ),
-          //TODO this data needs to be generated based on the chartcards being used for V2
-          /*_createDrawerItem(
-            icon: FontAwesomeIcons.tachometerFast,
-            text: Text(
-              FlutterI18n.translate(context, StringsKeys.str_occupancy),
-            ),
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.checkDouble,
-            text: Text(
-              FlutterI18n.translate(context, StringsKeys.str_sales),
-            ),
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.moneyBill,
-            text: Text(
-              FlutterI18n.translate(context, StringsKeys.str_revenue),
-            ),
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.funnelDollar,
-            text: Text(
-              FlutterI18n.translate(context, StringsKeys.str_cost),
-            ),
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.chartBar,
-            text: Text(
-              FlutterI18n.translate(context, StringsKeys.str_forecast),
-            ),
-          ),
-          _createDrawerItem(
-              icon: FontAwesomeIcons.signOut,
-              text: Text(
-                FlutterI18n.translate(context, StringsKeys.str_logout),
-                key: Key(TestWidgetKeys.WK_LOGOUT_BTN),
-              ),
-              onTap: () => _logoutDialog(context)),*/
         ],
       ),
     );
@@ -129,7 +91,7 @@ class AppDrawer extends StatelessWidget {
               ScopedModelDescendant<EmployeeController>(builder: (context, child, model) {
                 return Text(
                   model.employeeDataLoaded
-                      ? "${model.currentEmployee.firstname} ${model.currentEmployee.lastname}"
+                      ? model.currentEmployee.fullname
                       : "",
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 );
@@ -153,11 +115,9 @@ class AppDrawer extends StatelessWidget {
         color: Theme.of(context).appBarTheme.color,
         child: InkWell(
           onTap: () {
-            //Navigator.of(context).pushNamed(RouteNames.preferenceScreen); TODO V2
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
@@ -168,10 +128,6 @@ class AppDrawer extends StatelessWidget {
                   );
                 }),
               ),
-              /*Icon(
-                Icons.keyboard_arrow_right,
-                color: Colors.white,
-              )*/
             ],
           ),
         ),
