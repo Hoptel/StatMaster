@@ -70,7 +70,7 @@ class AppDrawer extends StatelessWidget {
                   child: Container(
                       width: 70.0,
                       height: 70.0,
-                      decoration: new BoxDecoration(
+                      decoration: model.employeeImagesLoaded ? BoxDecoration(
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black38,
@@ -82,7 +82,22 @@ class AppDrawer extends StatelessWidget {
                               ),
                             )
                           ],
-                          shape: BoxShape.circle,)),
+                          image: DecorationImage(image: model.currentImage) ,
+                          shape: BoxShape.circle,)
+                          : BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 6.0,
+                              spreadRadius: 2.0,
+                              offset: Offset(
+                                1.0,
+                                3.0,
+                              ),
+                            )
+                          ],
+                          shape: BoxShape.circle,)
+                          ),
                 );
               }),
               Container(
