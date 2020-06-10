@@ -21,7 +21,7 @@ class ReservatConveyor extends Conveyor {
 
   Future<List<ForecastDay>> getForecastDay(DateTime startDate, DateTime endDate, {Map<String, String> headers}) async {
     Response response =
-        await sendRequest(HttpMethod.GET, "/forecast/day", headers ?? await RequestHelper.getAuthHeader(), params: {
+        await sendRequest(HttpMethod.GET, "forecast/day", headers ?? await RequestHelper.getAuthHeader(), params: {
       "startdate": DateFormat("yyyy-MM-dd").format(startDate),
       "enddate": DateFormat("yyyy-MM-dd").format(endDate),
     });
@@ -37,7 +37,7 @@ class ReservatConveyor extends Conveyor {
   Future<List<ForecastTotals>> getForecastTotals(DateTime startDate, DateTime endDate,
       {Map<String, String> headers}) async {
     Response response = await sendRequest(
-        HttpMethod.GET, "/forecast/totals", headers ?? await RequestHelper.getAuthHeader(),
+        HttpMethod.GET, "forecast/totals", headers ?? await RequestHelper.getAuthHeader(),
         params: {
           "startdate": DateFormat("yyyy-MM-dd").format(startDate),
           "enddate": DateFormat("yyyy-MM-dd").format(endDate),
