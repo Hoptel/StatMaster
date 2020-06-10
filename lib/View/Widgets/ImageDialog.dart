@@ -122,7 +122,7 @@ class ImageDialog extends StatelessWidget {
             width: 100,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Theme.of(context).cardColor,
+              color: Color(0x10ffffff),
               image: image != null
                   ? DecorationImage(
                       fit: BoxFit.cover,

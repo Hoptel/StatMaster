@@ -30,7 +30,7 @@ class GaugeChart extends StatelessWidget {
   });
 
   factory GaugeChart.withValue(int valueFull, int valueEmpty,
-      {Color fullColor = Colors.blue, Color emptyColor = Colors.grey, bool animate = true, int width = 12
+      {Color fullColor = Colors.blue, Color emptyColor = const Color(0x10ffffff), bool animate = true, int width = 12
       /*bool animateOnce = true*/
       }) {
     List<GaugeSegment> segs = [
@@ -51,7 +51,7 @@ class GaugeChart extends StatelessWidget {
     int valueFull,
     int valueEmpty, {
     Color fullColor = Colors.blue,
-    Color emptyColor = Colors.grey,
+    Color emptyColor = const Color(0x10ffffff),
     bool animate = true,
     int segments = 2,
     double colorBrighteningPercentage = 0.1,

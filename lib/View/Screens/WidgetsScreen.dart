@@ -88,7 +88,7 @@ class WidgetsScreen extends StatelessWidget {
                                 ScopedModelDescendant<ReservatController>(builder: (context, child, model) {
                                   return model.occData != null
                                       ? GaugeChartWithNumber(model.occData.occrate, 100.0 - model.occData.occrate,
-                                          Colors.green[800], Color(0xfff5f5f5), context)
+                                          Colors.green[800], Color(0x10ffffff), context)
                                       : Container();
                                 }),
                                 cardWidth: ChartCardWidth.halfWidth,
