@@ -9,7 +9,7 @@ import '../Utilities/Models/login/LoginAuth.dart';
 import '../Utilities/Models/login/UserInfo.dart';
 
 class Preference {
-  static FlutterSecureStorage secureStorage;
+  static FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   static Future initialize() async {
     await PrefService.init(prefix: 'statmaster_');

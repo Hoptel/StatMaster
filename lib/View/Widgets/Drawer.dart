@@ -82,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                               ),
                             )
                           ],
-                          image: DecorationImage(image: model.currentImage) ,
+                          image: model.currentImage != null ? DecorationImage(image: model.currentImage) : null ,
                           shape: BoxShape.circle,)
                           : BoxDecoration(
                           boxShadow: [

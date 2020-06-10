@@ -14,19 +14,12 @@ import '../Utilities/Conveyors/login/LoginConveyor.dart';
 class LoginController extends Model {
   bool _isSuccess;
   bool _isLoading = false;
-  bool _rememberMe = false;
   bool showPassword = false;
   static bool isUserLoggedIn = false;
-
-
-  String version = "";
-  String buildNumber = "";
 
   bool get isSuccess => _isSuccess;
 
   bool get isLoading => _isLoading;
-
-  bool get rememberMe => _rememberMe;
 
   void changeLoginStatus(bool status) {
     isUserLoggedIn = status;
@@ -53,13 +46,25 @@ class LoginController extends Model {
     }
   }
 
-  Future changeUser(String code) async {
-    await LoginConveyor.getInstance().getRefreshTokenAuth(identifier: code, multiUser: true);
+    Future<bool> checkAuth({bool alreadyChecked = false}) async {
+    int loginfoCode = await LoginConveyor.getInstance().checkAuthCode();
+    if (loginfoCode == 401) {
+      if (alreadyChecked) {
+        return false;
+      }
+      await LoginConveyor.getInstance().getRefreshTokenAuth(multiUser: true);
+      return checkAuth(alreadyChecked: true);
+    } else if (loginfoCode == 200) {
+      isUserLoggedIn = true;
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  void remember(bool value) {
-    _rememberMe = value ?? false;
-    notifyListeners();
+  Future changeUser(String code) async {
+    await LoginConveyor.getInstance().getRefreshTokenAuth(identifier: code, multiUser: true);
   }
 
   void updateShowPassword({bool value}) {

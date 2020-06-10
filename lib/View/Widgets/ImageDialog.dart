@@ -56,7 +56,7 @@ class ImageDialog extends StatelessWidget {
           ),
           margin: EdgeInsets.only(top: avatarRadius),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(padding),
             boxShadow: [
@@ -122,7 +122,7 @@ class ImageDialog extends StatelessWidget {
             width: 100,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xffA0A0A0),
+              color: Theme.of(context).cardColor,
               image: image != null
                   ? DecorationImage(
                       fit: BoxFit.cover,

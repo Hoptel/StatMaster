@@ -1,3 +1,4 @@
+import 'package:StatMaster/View/Screens/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:worker_manager/worker_manager.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Stat Master',
       theme: theme,
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }

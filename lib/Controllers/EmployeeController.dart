@@ -52,6 +52,7 @@ class EmployeeController extends Model {
     print(identifier);
     Employee currentEmp;
     for (Employee emp in employeeData.values) {
+      print (emp.userid);
       if (emp.userid == identifier) {
         currentEmp = emp;
         break;

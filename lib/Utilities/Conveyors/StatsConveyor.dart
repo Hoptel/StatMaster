@@ -29,7 +29,7 @@ class StatsConveyor extends Conveyor {
 
   Future<Rev> getGenRev(DateTime startDate, DateTime endDate, {Map<String, String> headers}) async {
     Response response =
-        await sendRequest(HttpMethod.GET, "gen/revenue", headers ?? await RequestHelper.getAuthHeader(), params: {
+        await sendRequest(HttpMethod.GET, "/gen/revenue", headers ?? await RequestHelper.getAuthHeader(), params: {
       'startdate': DateFormat(serviceDateFormat).format(startDate),
       'enddate': DateFormat(serviceDateFormat).format(endDate)
     });
@@ -40,7 +40,7 @@ class StatsConveyor extends Conveyor {
 
   Future<Sales> getGenSales(DateTime startDate, DateTime endDate, {Map<String, String> headers}) async {
     Response response =
-        await sendRequest(HttpMethod.GET, "gen/sales", headers ?? await RequestHelper.getAuthHeader(), params: {
+        await sendRequest(HttpMethod.GET, "/gen/sales", headers ?? await RequestHelper.getAuthHeader(), params: {
       'startdate': DateFormat(serviceDateFormat).format(startDate),
       'enddate': DateFormat(serviceDateFormat).format(endDate)
     });
