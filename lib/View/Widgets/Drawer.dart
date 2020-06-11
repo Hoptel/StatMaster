@@ -56,7 +56,7 @@ class AppDrawer extends StatelessWidget {
         height: 170 + Utils.statusBarHeight(context),
         child: DrawerHeader(
           margin: EdgeInsets.zero,
-          decoration: BoxDecoration(color: Color(0xff707070)),
+          decoration: BoxDecoration(color: Color(0xff303841)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
