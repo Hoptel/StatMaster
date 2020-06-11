@@ -80,7 +80,7 @@ class PercentOfDomainBarChart extends StatelessWidget {
   }
 
   static List<charts.Series<PODD, String>> _createData(List<FData> data,
-      {Color emptyColor = const Color(0xffe4e4e4), Color fullColor = Colors.green}) {
+      {Color emptyColor = const Color(0x10ffffff), Color fullColor = Colors.green}) {
     List<PODD> fullData = [];
     List<PODD> emptyData = [];
     bool manyItems = data.length > 10;

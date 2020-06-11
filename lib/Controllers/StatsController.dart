@@ -14,7 +14,6 @@ class StatsController extends Model {
   bool salesDataLoading = false;
 
   Future getRevData(DateTime startDate, DateTime endDate) async {
-    if (!revDataLoaded && !revDataLoading) {
       revDataLoading = true;
       notifyListeners();
       revData = await StatsConveyor.getInstance().getGenRev(startDate, endDate);
@@ -23,11 +22,9 @@ class StatsController extends Model {
       }
       revDataLoading = false;
       notifyListeners();
-    }
   }
 
   Future getSalesData(DateTime startDate, DateTime endDate) async {
-    if (!salesDataLoaded && !salesDataLoading) {
       salesDataLoading = true;
       notifyListeners();
       salesData = await StatsConveyor.getInstance().getGenSales(startDate, endDate);
@@ -36,6 +33,6 @@ class StatsController extends Model {
       }
       salesDataLoading = false;
       notifyListeners();
-    }
+    
   }
 }
